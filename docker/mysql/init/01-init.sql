@@ -1,4 +1,47 @@
--- Insertion des débats sur le thème du lait
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET character_set_connection=utf8mb4;
+
+-- Create database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS express_debate
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE express_debate;
+
+-- Create debates table
+CREATE TABLE IF NOT EXISTS debates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    votes_pour INT DEFAULT 0,
+    votes_contre INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create comments table
+CREATE TABLE IF NOT EXISTS comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    debate_id INT NOT NULL,
+    content TEXT NOT NULL,
+    author VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (debate_id) REFERENCES debates(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Create user_votes table
+CREATE TABLE IF NOT EXISTS user_votes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    debate_id INT NOT NULL,
+    user_ip VARCHAR(45) NOT NULL,
+    vote_type ENUM('pour', 'contre') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (debate_id) REFERENCES debates(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_vote (debate_id, user_ip)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insert debates
 INSERT INTO debates (title, description, votes_pour, votes_contre, created_at) VALUES
 (
     'Le lait est-il l''un des aliments les plus complets ?',
@@ -47,7 +90,7 @@ INSERT INTO debates (title, description, votes_pour, votes_contre, created_at) V
 ),
 (
     'Le lait peut-il jouer un rôle dans une alimentation plus durable ?',
-    'Avec des innovations dans l''élevage et la production, le lait peut-il devenir un exemple d''aliment respectueux de l''environnement ?',
+    'Avec des innovations comme le lait bio ou les circuits courts, la filière laitière évolue. Comment peut-elle répondre aux enjeux environnementaux ?',
     0, 0, NOW()
 ),
 (

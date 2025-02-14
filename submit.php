@@ -1,9 +1,12 @@
 <?php
 require_once 'db.php';
 
+// Only process POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+    header('Content-Type: application/json; charset=utf-8');
+    
+    $title = trim($_POST['title'] ?? '');
+    $description = trim($_POST['description'] ?? '');
     
     $response = ['success' => false];
     
@@ -23,12 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['message'] = "Veuillez remplir tous les champs";
     }
     
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit; // Important: stop execution here for POST requests
 }
-?>
 
+// Only show HTML for GET requests
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -76,3 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="script.js"></script>
 </body>
 </html>
+<?php
+}
+?>

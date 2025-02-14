@@ -19,6 +19,15 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Configure Apache for UTF-8
+RUN echo "AddDefaultCharset UTF-8" >> /etc/apache2/conf-available/charset.conf \
+    && a2enconf charset
+
+# Set PHP configuration for UTF-8
+RUN echo "default_charset = UTF-8" >> /usr/local/etc/php/php.ini-development \
+    && echo "default_charset = UTF-8" >> /usr/local/etc/php/php.ini-production \
+    && cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+
 # Set working directory
 WORKDIR /var/www/html
 

@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch("vote.php", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json; charset=utf-8"
           },
           body: JSON.stringify({
             debate_id: debateId,
@@ -78,7 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch("comment.php", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json; charset=utf-8"
           },
           body: JSON.stringify({
             debate_id: debateId,
@@ -135,6 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
           body: formData,
         });
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success) {
@@ -144,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       } catch (error) {
         console.error("Erreur:", error);
+        alert("Une erreur est survenue lors de la soumission du débat");
       }
     });
   }
