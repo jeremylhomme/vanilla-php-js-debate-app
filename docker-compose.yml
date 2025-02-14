@@ -11,6 +11,8 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
       - DB_NAME=${DB_NAME}
+    ports:
+      - "127.0.0.1:8000:80"  # Only accessible locally
     depends_on:
       - db
     networks:
