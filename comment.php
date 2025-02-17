@@ -18,15 +18,15 @@ if (!$debate_id || empty($content)) {
 }
 
 try {
-    // Vérifier si le débat existe et n'a pas expiré
+    // Vérifier si le débat existe
     $stmt = $pdo->prepare("
         SELECT id FROM debates 
-        WHERE id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 48 HOUR)
+        WHERE id = ?
     ");
     $stmt->execute([$debate_id]);
     
     if (!$stmt->fetch()) {
-        echo json_encode(['success' => false, 'message' => 'Débat non trouvé ou expiré']);
+        echo json_encode(['success' => false, 'message' => 'Débat non trouvé']);
         exit;
     }
 

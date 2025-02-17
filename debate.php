@@ -1,14 +1,12 @@
 <?php
 require_once 'db.php';
 
-// Récupération des débats (moins de 48h)
 $stmt = $pdo->query("
     SELECT d.*, 
            (votes_pour + votes_contre) as total_votes,
            COUNT(c.id) as comment_count
     FROM debates d
     LEFT JOIN comments c ON d.id = c.debate_id
-    WHERE d.created_at >= DATE_SUB(NOW(), INTERVAL 48 HOUR)
     GROUP BY d.id
     ORDER BY total_votes DESC, d.created_at DESC
 ");

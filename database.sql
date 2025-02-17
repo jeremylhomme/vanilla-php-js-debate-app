@@ -34,16 +34,4 @@ CREATE TABLE IF NOT EXISTS user_votes (
     UNIQUE KEY unique_vote (debate_id, user_ip)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Procédure stockée pour nettoyer les débats expirés
-DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS cleanup_expired_debates()
-BEGIN
-    DELETE FROM debates 
-    WHERE created_at < DATE_SUB(NOW(), INTERVAL 48 HOUR);
-END //
-DELIMITER ;
-
--- Événement pour exécuter le nettoyage automatiquement toutes les heures
-CREATE EVENT IF NOT EXISTS cleanup_debates_event
-ON SCHEDULE EVERY 1 HOUR
-DO CALL cleanup_expired_debates();
+-- No cleanup trigger needed since we want to keep all debates
